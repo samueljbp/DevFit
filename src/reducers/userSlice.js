@@ -16,9 +16,24 @@ export const userSlice = createSlice({
         setName: (state, action) => {
             state.name = action.payload.name;
         },
+        setWorkoutDays: (state, action) => {
+            state.workoutDays = action.payload.workoutDays;
+        },
+        setLevel: (state, action) => {
+            state.level = action.payload.level;
+        },
+        addWorkout: (state, action) => {
+            state.myWorkouts.push(action.payload.workout);
+        },
+        removeWorkout: (state, action) => {
+            state.myWorkouts = state.myWorkouts.filter(
+                item => item.id != action.payload.workout.id,
+            );
+        },
     },
 });
 
-export const {setName} = userSlice.actions;
+export const {setName, setWorkoutDays, setLevel, addWorkout, removeWorkout} =
+    userSlice.actions;
 
 export default userSlice.reducer;

@@ -4,7 +4,7 @@ import {useNavigation, CommonActions} from '@react-navigation/native';
 
 const Preload = props => {
     const dispatch = useDispatch();
-    const userData = useSelector(state => state.user);
+    const userData = useSelector(state => state.userSlice.user);
     const navigation = useNavigation();
 
     useEffect(() => {
