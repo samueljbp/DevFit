@@ -2,7 +2,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import Preload from '../screens/Preload';
 import StarterStack from './StarterStack';
-//import AppTab from './AppTab';
+import AppTab from './AppTab';
 
 const Stack = createStackNavigator();
 
@@ -15,6 +15,7 @@ const MainStack = () => {
             }}>
             <Stack.Screen name="Preload" component={Preload} />
             <Stack.Screen name="StarterStack" component={StarterStack} />
+            <Stack.Screen name="AppTab" component={AppTab} />
         </Stack.Navigator>
     );
 };

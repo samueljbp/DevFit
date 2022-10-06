@@ -4,40 +4,28 @@ import {useNavigation, CommonActions} from '@react-navigation/native';
 
 const Preload = props => {
     const dispatch = useDispatch();
-    const userData = useSelector(state => state.userSlice.user);
+    const userData = useSelector(state => state.userSlice);
     const navigation = useNavigation();
 
     useEffect(() => {
-        //codigo temporario
-        navigation.dispatch(
-            CommonActions.reset({
-                index: 1,
-                routes: [{name: 'StarterStack'}],
-            }),
-        );
-    }, []);
-
-    /*
-    if (!userData.name) {
-        //mandar para starter stack
-        props.navigation.dispatch(
-            StackActions.reset({
-                index: 0,
-                actions: [
-                    NavigationActions.navigate({routeName: 'StarterStack'}),
-                ],
-            }),
-        );
-    } else {
-        //mandar para app tab
-        props.navigation.dispatch(
-            StackActions.reset({
-                index: 0,
-                actions: [NavigationActions.navigate({routeName: 'AppTab'})],
-            }),
-        );
-    }
-    */
+        if (!userData.level) {
+            //mandar para starter stack
+            navigation.dispatch(
+                CommonActions.reset({
+                    index: 1,
+                    routes: [{name: 'StarterStack'}],
+                }),
+            );
+        } else {
+            //mandar para app tab
+            navigation.dispatch(
+                CommonActions.reset({
+                    index: 1,
+                    routes: [{name: 'AppTab'}],
+                }),
+            );
+        }
+    }, [userData.level]);
 
     return null;
 };
