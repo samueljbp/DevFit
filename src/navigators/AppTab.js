@@ -2,6 +2,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeStack from './HomeStack';
 import Temp1 from './HomeStack';
 import Temp2 from './HomeStack';
+import CustomTabBar from '../components/CustomTabBar';
 //import WorkoutStack from './WorkoutStack';
 //import MyWorkoutsStack from './MyWorkoutsStack';
 

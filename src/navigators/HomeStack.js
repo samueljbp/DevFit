@@ -10,7 +10,10 @@ const HomeStack = () => {
         <Stack.Navigator
             initialRouteName="HomeScreen"
             screenOptions={{
-                headerShown: false,
+                headerShown: true,
+                cardStyle: {
+                    backgroundColor: '#FFF',
+                },
             }}>
             <Stack.Screen name="HomeScreen" component={HomeScreen} />
         </Stack.Navigator>
