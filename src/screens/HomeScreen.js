@@ -2,7 +2,7 @@ import React, {useLayoutEffect, useState} from 'react';
 import {useNavigation, CommonActions} from '@react-navigation/native';
 import styled from 'styled-components/native';
 import {useSelector, useDispatch, connect} from 'react-redux';
-import {addWorkout, removeWorkout} from '../reducers/userSlice';
+import {addProgress, removeProgress} from '../reducers/userSlice';
 import HomeMonthScroll from '../components/HomeMonthScroll';
 import HomeDaysScroll from '../components/HomeDaysScroll';
 import HomeDayStatus from '../components/HomeDayStatus';
@@ -49,6 +49,7 @@ const Page = props => {
     const userData = useSelector(state => state.userSlice);
     let today = new Date();
     const [selectedMonth, setSelectedMonth] = useState(today.getMonth());
+    const [selectedDay, setSelectedDay] = useState(today.getDate());
 
     const ConfigButton = () => {
         const btnAction = () => {
@@ -70,7 +71,7 @@ const Page = props => {
             },
             headerRight: () => <ConfigButton />,
         });
-    }, [userData.myWorkouts]);
+    }, []);
 
     return (
         <Container>
@@ -78,9 +79,23 @@ const Page = props => {
                 selectedMonth={selectedMonth}
                 setSelectedMonth={setSelectedMonth}
             />
-            <LegendText>{selectedMonth}</LegendText>
-            <HomeDaysScroll />
-            <HomeDayStatus />
+            <HomeDaysScroll
+                selectedMonth={selectedMonth}
+                selectedDay={selectedDay}
+                setSelectedDay={setSelectedDay}
+                dailyProgress={props.dailyProgress}
+                workoutDays={props.workoutDays}
+            />
+            <HomeDayStatus
+                selectedMonth={selectedMonth}
+                selectedDay={selectedDay}
+                setSelectedDay={setSelectedDay}
+                dailyProgress={props.dailyProgress}
+                workoutDays={props.workoutDays}
+                addProgress={props.addProgress}
+                removeProgress={props.removeProgress}
+                //goToWorkout={navigation.navigate('WorkoutStack')}
+            />
 
             <Legend>
                 <LegendText>Legenda:</LegendText>
@@ -114,11 +129,27 @@ const Page = props => {
 };
 
 const mapStateToProps = state => {
-    return {};
+    return {
+        dailyProgress: state.userSlice.dailyProgress,
+        workoutDays: state.userSlice.workoutDays,
+    };
 };
 
 const mapDispatchToProps = dispatch => {
-    return {};
+    return {
+        addProgress: date =>
+            dispatch(
+                addProgress({
+                    date,
+                }),
+            ),
+        removeProgress: date =>
+            dispatch(
+                removeProgress({
+                    date,
+                }),
+            ),
+    };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Page);

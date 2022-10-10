@@ -30,10 +30,27 @@ export const userSlice = createSlice({
                 item => item.id != action.payload.workout.id,
             );
         },
+        addProgress: (state, action) => {
+            if (!state.dailyProgress.includes(action.payload.date)) {
+                state.dailyProgress.push(action.payload.date);
+            }
+        },
+        removeProgress: (state, action) => {
+            state.dailyProgress = state.dailyProgress.filter(
+                d => d != action.payload.date,
+            );
+        },
     },
 });
 
-export const {setName, setWorkoutDays, setLevel, addWorkout, removeWorkout} =
-    userSlice.actions;
+export const {
+    setName,
+    setWorkoutDays,
+    setLevel,
+    addWorkout,
+    removeWorkout,
+    addProgress,
+    removeProgress,
+} = userSlice.actions;
 
 export default userSlice.reducer;
