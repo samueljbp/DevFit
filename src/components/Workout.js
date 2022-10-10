@@ -1,3 +1,4 @@
+import {PreventRemoveProvider} from '@react-navigation/native';
 import React, {useState} from 'react';
 import styled from 'styled-components/native';
 import useMuscleImage from './useMuscleImage';
@@ -20,6 +21,7 @@ const MuscleScroll = styled.ScrollView`
     margin: 10px;
 `;
 const WorkoutActions = styled.View`
+    flex-direction: row;
     justify-content: center;
     align-items: center;
 `;
@@ -63,6 +65,14 @@ export default props => {
         props.addAction();
     };
 
+    const editWorkout = () => {
+        props.editAction();
+    };
+
+    const removeWorkout = () => {
+        props.removeAction();
+    };
+
     return (
         <Workout>
             <WorkoutInfo>
@@ -76,17 +86,37 @@ export default props => {
                 </MuscleScroll>
             </WorkoutInfo>
             <WorkoutActions>
-                <WorkoutButton
-                    onPress={() => addWorkout()}
-                    underlayColor="transparent">
-                    <WorkoutButtonImage
-                        source={
-                            included
-                                ? require('../assets/check-black.png')
-                                : require('../assets/add.png')
-                        }
-                    />
-                </WorkoutButton>
+                {props.addAction && (
+                    <WorkoutButton
+                        onPress={() => addWorkout()}
+                        underlayColor="transparent">
+                        <WorkoutButtonImage
+                            source={
+                                included
+                                    ? require('../assets/check-black.png')
+                                    : require('../assets/add.png')
+                            }
+                        />
+                    </WorkoutButton>
+                )}
+                {props.editAction && (
+                    <WorkoutButton
+                        onPress={() => editWorkout()}
+                        underlayColor="transparent">
+                        <WorkoutButtonImage
+                            source={require('../assets/edit-black.png')}
+                        />
+                    </WorkoutButton>
+                )}
+                {props.removeAction && (
+                    <WorkoutButton
+                        onPress={() => removeWorkout()}
+                        underlayColor="transparent">
+                        <WorkoutButtonImage
+                            source={require('../assets/trash-black.png')}
+                        />
+                    </WorkoutButton>
+                )}
             </WorkoutActions>
         </Workout>
     );

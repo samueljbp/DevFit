@@ -92,6 +92,7 @@ export default props => {
         let posX = (d - 1) * dayW;
 
         DaysScrollRef.current.scrollTo({x: posX, y: 0, animated: true});
+        setSelectedDay(d);
     };
 
     useEffect(() => {

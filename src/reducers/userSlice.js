@@ -17,7 +17,8 @@ export const userSlice = createSlice({
             state.name = action.payload.name;
         },
         setWorkoutDays: (state, action) => {
-            state.workoutDays = action.payload.workoutDays;
+            let newWorkoutDays = action.payload.workoutDays;
+            state.workoutDays = newWorkoutDays;
         },
         setLevel: (state, action) => {
             state.level = action.payload.level;

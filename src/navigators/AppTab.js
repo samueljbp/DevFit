@@ -4,7 +4,7 @@ import Temp1 from './HomeStack';
 import Temp2 from './HomeStack';
 import CustomTabBar from '../components/CustomTabBar';
 //import WorkoutStack from './WorkoutStack';
-//import MyWorkoutsStack from './MyWorkoutsStack';
+import MyWorkoutsStack from './MyWorkoutsStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -43,8 +43,13 @@ const AppTab = () => {
             <Tab.Screen name="HomeStack" component={HomeStack} />
             <Tab.Screen name="Temp1" component={Temp1} />
             <Tab.Screen name="Temp2" component={Temp2} />
-            {/* <Tab.Screen name="WorkoutStack" component={WorkoutStack} />
-            <Tab.Screen name="MyWorkoutsStack" component={MyWorkoutsStack} /> */}
+            {
+                /* <Tab.Screen name="WorkoutStack" component={WorkoutStack} />*/
+                <Tab.Screen
+                    name="MyWorkoutsStack"
+                    component={MyWorkoutsStack}
+                />
+            }
         </Tab.Navigator>
     );
 };

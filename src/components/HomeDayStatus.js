@@ -111,7 +111,7 @@ export default props => {
         timerFunction();
 
         return () => clearInterval(timer);
-    }, []);
+    }, [timeLeft]);
 
     return (
         <>

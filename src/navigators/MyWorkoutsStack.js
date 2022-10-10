@@ -1,11 +1,11 @@
 import {createStackNavigator} from '@react-navigation/stack';
 
-import HomeScreen from '../screens/HomeScreen';
-import HomeConfig from '../screens/HomeConfig';
+import MyWorkouts from '../screens/MyWorkouts';
+import EditWorkout from '../screens/EditWorkout';
 
 const Stack = createStackNavigator();
 
-const HomeStack = () => {
+const MyWorkoutsStack = () => {
     return (
         <Stack.Navigator
             initialRouteName="HomeScreen"
@@ -15,10 +15,10 @@ const HomeStack = () => {
                     backgroundColor: '#FFF',
                 },
             }}>
-            <Stack.Screen name="HomeScreen" component={HomeScreen} />
-            <Stack.Screen name="HomeConfig" component={HomeConfig} />
+            <Stack.Screen name="MyWorkouts" component={MyWorkouts} />
+            <Stack.Screen name="EditWorkout" component={EditWorkout} />
         </Stack.Navigator>
     );
 };
 
-export default HomeStack;
+export default MyWorkoutsStack;
