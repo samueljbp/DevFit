@@ -26,6 +26,15 @@ export const userSlice = createSlice({
         addWorkout: (state, action) => {
             state.myWorkouts.push(action.payload.workout);
         },
+        editWorkout: (state, action) => {
+            let index = state.myWorkouts.findIndex(
+                i => i.id == action.payload.workout.id,
+            );
+
+            if (index >= 0) {
+                state.myWorkouts[index] = action.payload.workout;
+            }
+        },
         removeWorkout: (state, action) => {
             state.myWorkouts = state.myWorkouts.filter(
                 item => item.id != action.payload.workout.id,
@@ -41,6 +50,7 @@ export const userSlice = createSlice({
                 d => d != action.payload.date,
             );
         },
+        reset: () => initialState,
     },
 });
 
@@ -49,9 +59,11 @@ export const {
     setWorkoutDays,
     setLevel,
     addWorkout,
+    editWorkout,
     removeWorkout,
     addProgress,
     removeProgress,
+    reset,
 } = userSlice.actions;
 
 export default userSlice.reducer;

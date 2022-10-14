@@ -1,8 +1,9 @@
 import React, {useLayoutEffect, useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, CommonActions} from '@react-navigation/native';
 import styled from 'styled-components/native';
 import {useSelector, useDispatch, connect} from 'react-redux';
-import {setName, setWorkoutDays, setLevel} from '../reducers/userSlice';
+import {setName, setWorkoutDays, setLevel, reset} from '../reducers/userSlice';
+import {AlertDialog, Button} from 'native-base';
 
 const Container = styled.SafeAreaView`
     flex: 1;
@@ -56,10 +57,17 @@ const LevelItemText = styled.Text`
     font-weight: bold;
 `;
 
+const ResetButton = styled.Button``;
+
 const Page = props => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
     const userData = useSelector(state => state.userSlice);
+    const [showConfirmReset, setShowConfirmReset] = useState(false);
+
+    const onClose = () => setShowConfirmReset(false);
+
+    const cancelRef = React.useRef(null);
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -82,8 +90,46 @@ const Page = props => {
         }
     };
 
+    const resetAction = () => {
+        props.reset();
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 0,
+                routes: [{name: 'StarterStack'}],
+            }),
+        );
+    };
+
     return (
         <Container>
+            <AlertDialog
+                leastDestructiveRef={cancelRef}
+                isOpen={showConfirmReset}
+                onClose={onClose}>
+                <AlertDialog.Content>
+                    <AlertDialog.CloseButton />
+                    <AlertDialog.Header>ATENÇÃO</AlertDialog.Header>
+                    <AlertDialog.Body>
+                        Esta ação limpará todos os dados do aplicativo. Não há
+                        como voltar atrás. Deseja seguir em frente?
+                    </AlertDialog.Body>
+                    <AlertDialog.Footer>
+                        <Button.Group space={2}>
+                            <Button
+                                variant="unstyled"
+                                colorScheme="coolGray"
+                                onPress={onClose}
+                                ref={cancelRef}>
+                                Cancelar
+                            </Button>
+                            <Button colorScheme="danger" onPress={resetAction}>
+                                Apagar tudo
+                            </Button>
+                        </Button.Group>
+                    </AlertDialog.Footer>
+                </AlertDialog.Content>
+            </AlertDialog>
+
             <Label>Seu nome:</Label>
             <Input value={props.name} onChangeText={e => props.setName(e)} />
 
@@ -194,6 +240,12 @@ const Page = props => {
                     <LevelItemText>Avançado</LevelItemText>
                 </LevelItem>
             </ListArea>
+
+            <Label>Você quer resetar tudo?</Label>
+            <ResetButton
+                title="Resetar tudo"
+                onPress={() => setShowConfirmReset(true)}
+            />
         </Container>
     );
 };
@@ -226,6 +278,7 @@ const mapDispatchToProps = dispatch => {
                     level,
                 }),
             ),
+        reset: level => dispatch(reset()),
     };
 };
 

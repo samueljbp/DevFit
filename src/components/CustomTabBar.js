@@ -36,33 +36,36 @@ const TabBallImage = styled.Image`
 `;
 
 export default props => {
+    const tabConfig = props.items.find(o => o.route == props.routeName);
+
     return (
         <TabBarArea>
-            {props.items.map((item, index) => (
-                <TabBarItem key={item.route}>
-                    {item.type == 'regular' && (
-                        <TabRegular
-                            underlayColor="transparent"
-                            onPress={() =>
-                                props.navigation.navigate(item.route)
-                            }>
-                            <>
-                                <TabImage source={item.icon} />
-                                <Text>{item.text}</Text>
-                            </>
-                        </TabRegular>
-                    )}
-                    {item.type == 'big' && (
-                        <TabBall
-                            underlayColor="#00FF00"
-                            onPress={() =>
-                                props.navigation.navigate(item.route)
-                            }>
-                            <TabBallImage source={item.icon} />
-                        </TabBall>
-                    )}
-                </TabBarItem>
-            ))}
+            {tabConfig.tabBarVisible &&
+                props.items.map((item, index) => (
+                    <TabBarItem key={item.route}>
+                        {item.type == 'regular' && (
+                            <TabRegular
+                                underlayColor="transparent"
+                                onPress={() =>
+                                    props.navigation.navigate(item.route)
+                                }>
+                                <>
+                                    <TabImage source={item.icon} />
+                                    <Text>{item.text}</Text>
+                                </>
+                            </TabRegular>
+                        )}
+                        {item.type == 'big' && (
+                            <TabBall
+                                underlayColor="#00FF00"
+                                onPress={() =>
+                                    props.navigation.navigate(item.route)
+                                }>
+                                <TabBallImage source={item.icon} />
+                            </TabBall>
+                        )}
+                    </TabBarItem>
+                ))}
         </TabBarArea>
     );
 };

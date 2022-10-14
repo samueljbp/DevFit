@@ -8,7 +8,7 @@ const Stack = createStackNavigator();
 const MyWorkoutsStack = () => {
     return (
         <Stack.Navigator
-            initialRouteName="HomeScreen"
+            initialRouteName="MyWorkouts"
             screenOptions={{
                 headerShown: true,
                 cardStyle: {

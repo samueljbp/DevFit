@@ -16,14 +16,20 @@ const DayButton = styled.TouchableHighlight`
 
 const DayItem = styled.View`
     width: 30px;
-    height: 30px;
+    height: 35px;
     border-radius: 15px;
     background-color: #eee;
     justify-content: center;
     align-items: center;
 `;
 
-const DayText = styled.Text``;
+const DayText = styled.Text`
+    font-size: 10px;
+`;
+
+const WeekDayText = styled.Text`
+    font-size: 10px;
+`;
 
 const screenWidth = Dimensions.get('window').width;
 let dayW = Math.round(screenWidth / 9);
@@ -40,6 +46,9 @@ const Day = props => {
     today.setMilliseconds(0);
 
     let thisDate = new Date(today.getFullYear(), props.month, props.day);
+
+    var days = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'];
+    var dayName = days[thisDate.getDay()];
 
     if (props.workoutDays.includes(thisDate.getDay())) {
         if (thisDate.getTime() < today.getTime()) {
@@ -72,6 +81,7 @@ const Day = props => {
             onPress={props.onPress}
             underlayColor="transparent">
             <DayItem style={{opacity, backgroundColor: bgColor}}>
+                <WeekDayText>{dayName}</WeekDayText>
                 <DayText>{props.day}</DayText>
             </DayItem>
         </DayButton>

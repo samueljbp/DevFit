@@ -1,11 +1,12 @@
-import React, {useLayoutEffect, useState} from 'react';
+import React, {useLayoutEffect, useEffect, useState} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import styled from 'styled-components/native';
 import {useSelector, useDispatch, connect} from 'react-redux';
-import {setName, setWorkoutDays, setLevel} from '../reducers/userSlice';
+import {addWorkout, editWorkout} from '../reducers/userSlice';
 import DefaultButton from '../components/DefaultButton';
 import ExerciseItemEdit from '../components/ExerciseItemEdit';
 import CustomModal from '../components/CustomModal';
+import uuid from 'react-native-uuid';
 
 const Container = styled.SafeAreaView`
     flex: 1;
@@ -117,9 +118,28 @@ const Page = props => {
     const [modalReps, setModalReps] = useState('');
     const [modalLoad, setModalLoad] = useState('');
 
-    const SaveWorkoutButton = () => {
+    const SaveWorkoutButton = props => {
+        const handleSave = () => {
+            if (props.workout) {
+                let workout = props.workout;
+                if (workout.exercises.length <= 0) {
+                    alert('Você precisa ter pelo menos 1 exercício.');
+                    return;
+                }
+
+                if (workout.id != '') {
+                    props.editWorkoutAction(workout);
+                } else {
+                    workout.id = uuid.v4();
+                    props.addWorkoutAction(workout);
+                }
+
+                navigation.goBack();
+            }
+        };
+
         return (
-            <SaveArea>
+            <SaveArea onPress={handleSave} underlayColor="transparent">
                 <SaveImage source={require('../assets/check-black.png')} />
             </SaveArea>
         );
@@ -128,12 +148,18 @@ const Page = props => {
     useLayoutEffect(() => {
         navigation.setOptions({
             headerTitle: `${isEdit ? 'Editar' : 'Adicionar'} Treino`,
-            headerRight: () => <SaveWorkoutButton />,
+            headerRight: () => (
+                <SaveWorkoutButton
+                    addWorkoutAction={props.addWorkout}
+                    editWorkoutAction={props.editWorkout}
+                    workout={{id, name, exercises}}
+                />
+            ),
             headerRightContainerStyle: {
                 paddingRight: 10,
             },
         });
-    }, [isEdit]);
+    }, [isEdit, name, exercises]);
 
     const editExercise = exercise => {
         setModalId(exercise.id);
@@ -151,6 +177,61 @@ const Page = props => {
         newExercises = newExercises.filter(i => i.id != exercise.id);
 
         setExercises(newExercises);
+    };
+
+    const modalSave = () => {
+        let newExercises = [...exercises];
+
+        if (
+            modalName == '' ||
+            modalMuscle == '' ||
+            modalSets == '' ||
+            modalReps == ''
+        ) {
+            alert('Preencha todas as informações');
+            return;
+        }
+
+        if (modalId) {
+            //editando
+            let index = newExercises.findIndex(i => i.id == modalId);
+            if (index >= 0) {
+                newExercises[index].name = modalName;
+                newExercises[index].muscle = modalMuscle;
+                newExercises[index].reps = modalReps;
+                newExercises[index].sets = modalSets;
+                newExercises[index].load = modalLoad;
+            }
+        } else {
+            //inserindo
+            let ex = {
+                id: uuid.v4(),
+                name: modalName,
+                muscle: modalMuscle,
+                sets: modalSets,
+                reps: modalReps,
+                load: modalLoad,
+            };
+
+            newExercises.push(ex);
+        }
+
+        setExercises(newExercises);
+        setModalVisible(false);
+    };
+
+    const resetModal = () => {
+        setModalId('');
+        setModalName('');
+        setModalMuscle('');
+        setModalReps('');
+        setModalSets('');
+        setModalLoad('');
+    };
+
+    const addExercise = () => {
+        resetModal();
+        setModalVisible(true);
     };
 
     return (
@@ -262,7 +343,10 @@ const Page = props => {
                     </ModalExtraItem>
                 </ModalExtra>
 
-                <DefaultButton bgcolor="#4AC34E">
+                <DefaultButton
+                    bgcolor="#4AC34E"
+                    onPress={modalSave}
+                    underlayColor="transparent">
                     <ButtonText>Salvar</ButtonText>
                 </DefaultButton>
             </CustomModal>
@@ -272,7 +356,10 @@ const Page = props => {
                 placeholder="Digite o nome do treino"
             />
             <ExercisesArea>
-                <DefaultButton bgcolor="#4AC34E">
+                <DefaultButton
+                    bgcolor="#4AC34E"
+                    onPress={addExercise}
+                    underlayColor="transparent">
                     <ButtonText>Adicionar exercício</ButtonText>
                 </DefaultButton>
 
@@ -298,10 +385,16 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        setName: name =>
+        addWorkout: workout =>
             dispatch(
-                setName({
-                    name,
+                addWorkout({
+                    workout,
+                }),
+            ),
+        editWorkout: workout =>
+            dispatch(
+                editWorkout({
+                    workout,
                 }),
             ),
     };
