@@ -94,7 +94,7 @@ export default props => {
                 <ExerciseCheck
                     onPress={props.checkAction}
                     underlayColor="transparent">
-                    {props.data.done ? (
+                    {props.isDone ? (
                         <ExerciseDone
                             source={require('../assets/check-black.png')}
                         />

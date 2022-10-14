@@ -1,8 +1,7 @@
-import React, {useLayoutEffect, useEffect, useState} from 'react';
-import {useNavigation, useRoute, CommonActions} from '@react-navigation/native';
+import React, {useLayoutEffect, useState} from 'react';
+import {useNavigation, CommonActions} from '@react-navigation/native';
 import styled from 'styled-components/native';
-import {useSelector, useDispatch, connect} from 'react-redux';
-import {setName} from '../reducers/userSlice';
+import {useSelector} from 'react-redux';
 import Workout from '../components/Workout';
 import {HeaderBackButton} from '@react-navigation/elements';
 
@@ -23,11 +22,14 @@ const Title = styled.Text`
     margin-bottom: 10px;
 `;
 
-const Page = props => {
+const Page = () => {
     const navigation = useNavigation();
+    const userData = useSelector(state => state.userSlice);
+    const myWorkouts = Object.assign(userData.myWorkouts, {});
     let lastWorkout = null;
-    if (props.lastWorkout) {
-        lastWorkout = props.myWorkouts.find(i => i.id == props.lastWorkout);
+
+    if (userData.lastWorkout) {
+        lastWorkout = myWorkouts.find(i => i.id == userData.lastWorkout);
     }
 
     const handleBackAction = () => {
@@ -47,7 +49,7 @@ const Page = props => {
     }, []);
 
     const goWorkout = workout => {
-        navigation.navigate('WorkoutChecklist', {workout});
+        navigation.navigate('WorkoutChecklist', {workoutId: workout.id});
     };
 
     return (
@@ -60,7 +62,7 @@ const Page = props => {
             )}
             <Title>Escolha seu treino de hoje</Title>
             <WorkoutList
-                data={props.myWorkouts}
+                data={myWorkouts}
                 renderItem={({item}) => (
                     <Workout
                         data={item}
@@ -73,22 +75,4 @@ const Page = props => {
     );
 };
 
-const mapStateToProps = state => {
-    return {
-        myWorkouts: state.userSlice.myWorkouts,
-        lastWorkout: state.userSlice.lastWorkout,
-    };
-};
-
-const mapDispatchToProps = dispatch => {
-    return {
-        setName: name =>
-            dispatch(
-                setName({
-                    name,
-                }),
-            ),
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Page);
+export default Page;

@@ -41,9 +41,11 @@ export const userSlice = createSlice({
             );
         },
         addProgress: (state, action) => {
-            if (!state.dailyProgress.includes(action.payload.date)) {
-                state.dailyProgress.push(action.payload.date);
+            let newProgress = [...state.dailyProgress];
+            if (!newProgress.includes(action.payload.date)) {
+                newProgress.push(action.payload.date);
             }
+            state.dailyProgress = [...newProgress];
         },
         removeProgress: (state, action) => {
             state.dailyProgress = state.dailyProgress.filter(
@@ -51,7 +53,7 @@ export const userSlice = createSlice({
             );
         },
         setLastWorkout: (state, action) => {
-            state.lastWorkout = action.payload.id;
+            state.lastWorkout = action.payload.id.toString();
         },
         reset: () => initialState,
     },
@@ -67,6 +69,7 @@ export const {
     addProgress,
     removeProgress,
     setLastWorkout,
+    registerWorkout,
     reset,
 } = userSlice.actions;
 

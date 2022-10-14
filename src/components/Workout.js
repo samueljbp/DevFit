@@ -1,4 +1,3 @@
-import {PreventRemoveProvider} from '@react-navigation/native';
 import React, {useState} from 'react';
 import styled from 'styled-components/native';
 import useMuscleImage from './useMuscleImage';

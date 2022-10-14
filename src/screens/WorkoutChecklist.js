@@ -1,7 +1,7 @@
-import React, {useLayoutEffect, useState} from 'react';
+import React, {useLayoutEffect, useState, useEffect} from 'react';
 import {useNavigation, useRoute, CommonActions} from '@react-navigation/native';
 import styled from 'styled-components/native';
-import {connect} from 'react-redux';
+import {connect, useSelector} from 'react-redux';
 import {addProgress, setLastWorkout} from '../reducers/userSlice';
 import {StatusBar} from 'react-native';
 import ExerciseItem from '../components/ExerciseItem';
@@ -53,8 +53,12 @@ const WorkoutList = styled.FlatList`
 const Page = props => {
     const navigation = useNavigation();
     const route = useRoute();
-    let workout = route.params?.workout;
-    const [exercises, setExercises] = useState([...workout.exercises]);
+    const userData = useSelector(state => state.userSlice);
+    const workoutId = route.params?.workoutId;
+    let workout = userData.myWorkouts.find(w => w.id == workoutId);
+    let newWorkout = Object.assign({}, workout);
+    const [exercises, setExercises] = useState(newWorkout.exercises);
+    const [completedExercises, setCompletedExercises] = useState([]);
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -62,22 +66,22 @@ const Page = props => {
         });
     }, []);
 
-    const checkAction = (exercise, index) => {
-        let newExercises = [...exercises];
-
-        if (!exercise.done) {
-            newExercises[index].done = true;
-        } else {
-            newExercises[index].done = false;
-        }
-
-        setExercises([...newExercises]);
-
+    useEffect(() => {
         checkWorkout();
+    }, [completedExercises]);
+
+    const checkAction = (exercise, index) => {
+        if (!isExerciseDone(exercise.id)) {
+            var newList = [...completedExercises, exercise.id];
+            setCompletedExercises([...newList]);
+        } else {
+            var newList = completedExercises.filter(i => i != exercise.id);
+            setCompletedExercises([...newList]);
+        }
     };
 
     const checkWorkout = () => {
-        if (exercises.every(i => i.done)) {
+        if (exercises.length == completedExercises.length) {
             alert('Parabéns! Você finalizou!');
 
             let today = new Date();
@@ -101,12 +105,16 @@ const Page = props => {
         }
     };
 
+    const isExerciseDone = id => {
+        return completedExercises.find(i => i == id) != null;
+    };
+
     return (
         <Container source={require('../assets/fitness.jpg')}>
             <StatusBar barStyle="light-content" />
             <SafeArea>
                 <WorkoutHeader>
-                    <WorkoutTitle>{workout.name}</WorkoutTitle>
+                    <WorkoutTitle>{newWorkout.name}</WorkoutTitle>
                     <WorkoutClose underlayColor="transparent">
                         <WorkoutCloseText onPress={() => navigation.goBack()}>
                             X
@@ -118,6 +126,7 @@ const Page = props => {
                     renderItem={({item, index}) => (
                         <ExerciseItem
                             data={item}
+                            isDone={isExerciseDone(item.id)}
                             index={index}
                             checkAction={() => checkAction(item, index)}
                         />
