@@ -50,6 +50,9 @@ export const userSlice = createSlice({
                 d => d != action.payload.date,
             );
         },
+        setLastWorkout: (state, action) => {
+            state.lastWorkout = action.payload.id;
+        },
         reset: () => initialState,
     },
 });
@@ -63,6 +66,7 @@ export const {
     removeWorkout,
     addProgress,
     removeProgress,
+    setLastWorkout,
     reset,
 } = userSlice.actions;
 

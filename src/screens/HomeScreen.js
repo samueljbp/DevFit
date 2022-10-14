@@ -94,7 +94,7 @@ const Page = props => {
                 workoutDays={props.workoutDays}
                 addProgress={props.addProgress}
                 removeProgress={props.removeProgress}
-                //goToWorkout={navigation.navigate('WorkoutStack')}
+                goToWorkout={() => navigation.navigate('WorkoutStack')}
             />
 
             <Legend>

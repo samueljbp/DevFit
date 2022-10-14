@@ -27,7 +27,7 @@ const Page = props => {
     const navigation = useNavigation();
     let lastWorkout = null;
     if (props.lastWorkout) {
-        lastWorkout = props.myWorkouts.find((i.id = props.lastWorkout));
+        lastWorkout = props.myWorkouts.find(i => i.id == props.lastWorkout);
     }
 
     const handleBackAction = () => {
